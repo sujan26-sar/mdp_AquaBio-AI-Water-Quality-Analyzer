@@ -17,9 +17,13 @@ decision threshold optimized to 0.53 via F1-score maximization
 per-prediction SHAP waterfall plots using TreeExplainer
 
 Training Models:
+
 rf_model.pkl            # Trained Random Forest model
+
 xgb_model.pkl           # Trained XGBoost model
+
 gb_model.pkl            # Trained Gradient Boosting model
+
 scaler.pkl              # StandardScaler fitted on training data
 
 <img width="538" height="450" alt="image" src="https://github.com/user-attachments/assets/87c34656-db85-434d-9629-c025c9ad6706" />
