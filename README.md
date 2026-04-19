@@ -1,10 +1,10 @@
-# 💧 AquaBio-AI — Water Quality Risk Assessment System
+#  AquaBio-AI — Water Quality Risk Assessment System
 
 > A dual-engine water potability prediction system combining WHO guideline rule-checking (Biotech layer) with a 3-model Machine Learning ensemble (AI layer), built as part of an AIML + Biotech interdisciplinary project.
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 AquaBio-AI predicts whether a given water sample is **safe for drinking** by running two analysis engines simultaneously:
 
@@ -13,23 +13,10 @@ AquaBio-AI predicts whether a given water sample is **safe for drinking** by run
 
 The combined output gives a **risk score (0–100)**, a **potability probability**, and a **SHAP explainability chart** showing which parameters drove the prediction.
 
----
 
-## 🧬 Why This Approach?
+##  Project Structure
 
-Most water quality ML projects use a single model on raw features. AquaBio-AI introduces:
-
-1. **Hybrid dual-engine architecture** — deterministic biotech rules + probabilistic ML
-2. **Feature engineering** — 21 features engineered from 9 raw inputs (WQI, BOD proxy, TDS estimate, pH deviation, chemical index, etc.)
-3. **Class imbalance handling** — SMOTE oversampling applied to training data only
-4. **Threshold tuning** — decision threshold optimized to 0.53 via F1-score maximization
-5. **Explainability** — per-prediction SHAP waterfall plots using TreeExplainer
-
----
-
-## 🗂️ Project Structure
-
-```
+``'
 aquabio-ai/
 │
 ├── app.py                  # Flask web application (main backend)
@@ -60,7 +47,7 @@ aquabio-ai/
 
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 
 | Component | Technology |
 |---|---|
@@ -76,7 +63,7 @@ aquabio-ai/
 
 ---
 
-## 🔬 Input Parameters
+##  Input Parameters
 
 | Parameter | Unit | WHO Safe Limit |
 |---|---|---|
@@ -92,7 +79,7 @@ aquabio-ai/
 
 ---
 
-## 🤖 Model Performance
+##  Model Performance
 
 | Model | Accuracy | ROC-AUC |
 |---|---|---|
@@ -105,7 +92,7 @@ aquabio-ai/
 
 ---
 
-## 🚀 How to Run Locally
+##  How to Run Locally
 
 **1. Clone the repository**
 ```bash
@@ -132,7 +119,7 @@ Register an account → Login → Enter water parameters → Get prediction.
 
 ---
 
-## 🧪 Sample Test Data
+##  Sample Test Data
 
 **Test Case 1 — Unsafe Water**
 
@@ -168,7 +155,7 @@ Expected output: **SAFE** — parameters within acceptable range.
 
 ---
 
-## 📊 Engineered Features
+##  Engineered Features
 
 Beyond the 9 raw inputs, the system computes 12 additional features:
 
@@ -195,18 +182,3 @@ Beyond the 9 raw inputs, the system computes 12 additional features:
 - **Rows:** 3,276 water samples
 - **Missing values:** Handled using KNN Imputation (k=5)
 - **Class imbalance:** ~61% unsafe, ~39% safe → balanced using SMOTE
-
----
-
-## 👥 Team
-
-Built as part of a 2-credit interdisciplinary project combining **Artificial Intelligence & Machine Learning** and **Biotechnology** domains.
-
----
-
-## 📚 References
-
-- WHO Guidelines for Drinking-Water Quality, 4th Edition (2022)
-- Lundberg, S.M. & Lee, S.I. (2017). A Unified Approach to Interpreting Model Predictions. *NeurIPS*
-- Chen, T. & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. *KDD*
-- Chawla, N.V. et al. (2002). SMOTE: Synthetic Minority Over-sampling Technique. *JAIR*
