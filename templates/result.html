@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaBio-AI | Result</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">💧 AquaBio-AI</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <span class="text-white" style="font-size:14px;">Welcome, {{ username }}</span>
+            <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <a href="/" class="btn btn-outline-secondary btn-sm mb-3">← Analyze Another Sample</a>
+
+    <!-- Main result -->
+    <div class="mb-4">
+        {% if result == "SAFE" %}
+        <div class="result-safe">
+            <div class="result-title text-success">✅ {{ result_msg }}</div>
+            <p class="mb-0 text-muted">This water sample appears safe based on ML ensemble analysis and WHO guideline checks.</p>
+        </div>
+        {% else %}
+        <div class="result-danger">
+            <div class="result-title text-danger">⚠️ {{ result_msg }}</div>
+            <p class="mb-0 text-muted">This water sample is flagged as unsafe. Review WHO violations below.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Stats row -->
+    <div class="row mb-3">
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="label">Risk Score</div>
+                <div class="value {% if risk_score > 60 %}text-danger{% elif risk_score > 40 %}text-warning{% else %}text-success{% endif %}">
+                    {{ risk_score }}/100
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="label">WHO Violations</div>
+                <div class="value {% if who_count > 2 %}text-danger{% elif who_count > 0 %}text-warning{% else %}text-success{% endif %}">
+                    {{ who_count }} / 6
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="label">Model Accuracy</div>
+                <div class="value">{{ "%.1f"|format(accuracy * 100) }}%</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="label">ROC-AUC</div>
+                <div class="value">{{ "%.3f"|format(auc) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Safe probability bar -->
+    <div class="card">
+        <div class="card-header">📊 Potability Probability</div>
+        <div class="card-body">
+            <p class="mb-1" style="font-size:14px;">
+                Safe probability: <strong>{{ prob }}%</strong> &nbsp;|&nbsp;
+                Confidence: <strong>{{ confidence }}%</strong> &nbsp;|&nbsp;
+                WHO Label: <strong>{{ who_label }}</strong>
+            </p>
+            <div class="progress mt-2" style="height:18px;">
+                <div class="progress-bar {% if result == 'SAFE' %}bg-success{% else %}bg-danger{% endif %}"
+     role="progressbar"
+     style="width: {{ prob }}%;"
+     aria-valuenow="{{ prob }}"
+     aria-valuemin="0"
+     aria-valuemax="100">
+                    {{ prob }}%
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+                <small class="text-muted">0% (Unsafe)</small>
+                <small class="text-muted">Decision threshold: 53%</small>
+                <small class="text-muted">100% (Safe)</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- WHO Rule Engine -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">🧬 WHO Rule Engine Results</div>
+                <div class="card-body">
+                    {% if who_details %}
+                        {% for item in who_details %}
+                        <div class="who-violation">⚠️ {{ item }}</div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="who-ok">✅ All 6 parameters are within WHO safe limits</div>
+                    {% endif %}
+                    <p class="text-muted mt-2 mb-0" style="font-size:12px;">
+                        Reference: WHO Guidelines for Drinking-Water Quality, 4th Edition
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input summary -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">📋 Input Parameters Summary</div>
+                <div class="card-body">
+                    <table class="table table-sm table-bordered mb-0" style="font-size:13px;">
+                        <tbody>
+                            <tr><td><strong>pH</strong></td><td>{{ "%.3f"|format(data.ph) }}</td>
+                                <td><strong>Hardness</strong></td><td>{{ "%.2f"|format(data.Hardness) }}</td></tr>
+                            <tr><td><strong>Solids</strong></td><td>{{ "%.1f"|format(data.Solids) }}</td>
+                                <td><strong>Chloramines</strong></td><td>{{ "%.3f"|format(data.Chloramines) }}</td></tr>
+                            <tr><td><strong>Sulfate</strong></td><td>{{ "%.2f"|format(data.Sulfate) }}</td>
+                                <td><strong>Conductivity</strong></td><td>{{ "%.2f"|format(data.Conductivity) }}</td></tr>
+                            <tr><td><strong>Org. Carbon</strong></td><td>{{ "%.3f"|format(data.Organic_carbon) }}</td>
+                                <td><strong>Trihalometh.</strong></td><td>{{ "%.2f"|format(data.Trihalomethanes) }}</td></tr>
+                            <tr><td><strong>Turbidity</strong></td><td>{{ "%.3f"|format(data.Turbidity) }}</td>
+                                <td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SHAP -->
+    <div class="card">
+        <div class="card-header">🤖 SHAP Feature Importance (What Influenced This Prediction?)</div>
+        <div class="card-body">
+            <p style="font-size:13px;color:#666;">
+                SHAP values show which water parameters had the most impact on the ML model's decision for this specific sample.
+            </p>
+            <img src="/{{ shap_img }}" alt="SHAP Feature Importance" class="shap-img">
+            <p class="text-muted mt-2 mb-0" style="font-size:12px;">
+                Generated using SHAP TreeExplainer on XGBoost model
+            </p>
+        </div>
+    </div>
+
+    <!-- Model details -->
+    <div class="card">
+        <div class="card-header">⚙️ Model Architecture</div>
+        <div class="card-body">
+            <div class="row text-center" style="font-size:13px;">
+                <div class="col-md-3 mb-2">
+                    <strong>Layer 1 — Biotech</strong><br>
+                    <span class="text-muted">WHO 2022 rule engine<br>6-parameter threshold check</span>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <strong>Layer 2 — ML Ensemble</strong><br>
+                    <span class="text-muted">Random Forest (40%)<br>XGBoost (35%)<br>Gradient Boosting (25%)</span>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <strong>Feature Engineering</strong><br>
+                    <span class="text-muted">21 features from 9 inputs<br>WQI, BOD proxy, TDS<br>SMOTE balancing</span>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <strong>Explainability</strong><br>
+                    <span class="text-muted">SHAP TreeExplainer<br>Per-prediction attribution<br>Global feature importance</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        AquaBio-AI &nbsp;|&nbsp; AIML + Biotech Project &nbsp;|&nbsp; Dual-Engine Water Risk Assessment
+    </div>
+
+</div>
+
+</body>
+</html>

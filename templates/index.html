@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaBio-AI | Water Quality Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">💧 AquaBio-AI</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <span class="text-white" style="font-size:14px;">Welcome, {{ username }}</span>
+            <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- Page title -->
+    <div class="text-center mb-4">
+        <h2 style="color:#1a73e8;">Water Quality Risk Assessment</h2>
+        <p class="text-muted">Enter water sample parameters to check potability using WHO guidelines + ML Ensemble</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/predict">
+
+        <!-- Chemical Parameters -->
+        <div class="card">
+            <div class="card-header">🧪 Chemical Parameters</div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">pH Level</label>
+                        <input type="number" step="0.001" class="form-control" name="ph" placeholder="e.g. 7.2" required>
+                        <div class="who-limit">WHO safe range: 6.5 – 8.5</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Hardness (mg/L)</label>
+                        <input type="number" step="0.001" class="form-control" name="Hardness" placeholder="e.g. 204.8" required>
+                        <div class="who-limit">Typical range: 50 – 300 mg/L</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Solids (ppm)</label>
+                        <input type="number" step="0.001" class="form-control" name="Solids" placeholder="e.g. 20791.3" required>
+                        <div class="who-limit">WHO limit: ≤ 500 ppm</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Chloramines (ppm)</label>
+                        <input type="number" step="0.001" class="form-control" name="Chloramines" placeholder="e.g. 7.3" required>
+                        <div class="who-limit">WHO safe: ≤ 4.0 ppm</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Sulfate (mg/L)</label>
+                        <input type="number" step="0.001" class="form-control" name="Sulfate" placeholder="e.g. 368.5" required>
+                        <div class="who-limit">WHO safe: ≤ 250 mg/L</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Conductivity (μS/cm)</label>
+                        <input type="number" step="0.001" class="form-control" name="Conductivity" placeholder="e.g. 564.3" required>
+                        <div class="who-limit">WHO safe: ≤ 400 μS/cm</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Physical & Biological Parameters -->
+        <div class="card">
+            <div class="card-header">🔬 Physical &amp; Biological Parameters</div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Organic Carbon (ppm)</label>
+                        <input type="number" step="0.001" class="form-control" name="Organic_carbon" placeholder="e.g. 10.3" required>
+                        <div class="who-limit">WHO guide: ≤ 2 ppm</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Trihalomethanes (μg/L)</label>
+                        <input type="number" step="0.001" class="form-control" name="Trihalomethanes" placeholder="e.g. 86.9" required>
+                        <div class="who-limit">WHO safe: ≤ 80 μg/L</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Turbidity (NTU)</label>
+                        <input type="number" step="0.001" class="form-control" name="Turbidity" placeholder="e.g. 2.96" required>
+                        <div class="who-limit">WHO safe: ≤ 4 NTU</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5">
+                🔍 Analyze Water Sample
+            </button>
+        </div>
+
+    </form>
+
+    <div class="footer">
+        AquaBio-AI &nbsp;|&nbsp; AIML + Biotech Project &nbsp;|&nbsp; WHO Guidelines + ML Ensemble
+    </div>
+
+</div>
+
+</body>
+</html>
