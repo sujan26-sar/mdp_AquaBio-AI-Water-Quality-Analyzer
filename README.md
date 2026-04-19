@@ -4,8 +4,10 @@ AquaBio-AI — Water Quality Risk Assessment System
 A dual-engine water potability prediction system combining WHO guideline rule-checking (Biotech layer) with a 3-model Machine Learning ensemble (AI layer), built as part of an AIML + Biotech interdisciplinary project.
 
 Project Overview
-AquaBio-AI predicts whether a given water sample is safe for drinking by running two analysis engines simultaneously:\n
+AquaBio-AI predicts whether a given water sample is safe for drinking by running two analysis engines simultaneously: 
+
 Layer 1 — Biotech Rule Engine: Checks each water parameter against real WHO 2022 drinking water guidelines and flags violations with severity scores.
+
 Layer 2 — ML Ensemble: A weighted ensemble of Random Forest, XGBoost, and Gradient Boosting models trained on engineered features derived from 9 raw water quality parameters.
 
 The combined output gives a risk score (0–100), a potability probability, and a SHAP explainability chart showing which parameters drove the prediction.
